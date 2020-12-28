@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="IndustryApp.Views.MainPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="{Binding Title}"
+    BackgroundColor="Azure">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="HeaderLabel" TargetType="Label">
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="FontSize" Value="15" />
+                <Setter Property="TextColor" Value="Black" />
+            </Style>
+
+            <Style x:Key="LineLabel" TargetType="Label">
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="FontAttributes" Value="Italic" />
+                <Setter Property="FontSize" Value="15" />
+                <Setter Property="TextColor" Value="Black" />
+
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="StartAndExpand">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+
+            <StackLayout Margin="0,20,0,0" VerticalOptions="StartAndExpand">
+
+                <!--<Label Text="data grid"
+                   VerticalTextAlignment="Start"
+                   VerticalOptions="CenterAndExpand"
+                   HorizontalTextAlignment="Center"/>-->
+
+
+                <Grid BackgroundColor="Azure">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="50" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="AUTO" />
+                        <ColumnDefinition Width="2*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Label
+                        Grid.Column="0"
+                        Style="{StaticResource HeaderLabel}"
+                        Text="TEMPERATURA" />
+                    <Label
+                        Grid.Column="1"
+                        Style="{StaticResource HeaderLabel}"
+                        Text="ID CZUJNIKA" />
+                    <Label
+                        Grid.Column="2"
+                        Style="{StaticResource HeaderLabel}"
+                        Text="CZAS" />
+
+                    <Label
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Style="{StaticResource LineLabel}"
+                        Text="{Binding ReciverData.Temperature}" />
+                    <Label
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Style="{StaticResource LineLabel}"
+                        Text="{Binding ReciverData.Address}" />
+                    <Label
+                        Grid.Row="1"
+                        Grid.Column="2"
+                        Style="{StaticResource LineLabel}"
+                        Text="{Binding ReciverData.Date}" />
+                </Grid>
+            </StackLayout>
+        </Grid>
+    </StackLayout>
+
+</ContentPage>

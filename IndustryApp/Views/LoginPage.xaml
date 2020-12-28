@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="IndustryApp.Views.LoginPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:prism="http://prismlibrary.com"
+    xmlns:s="clr-namespace:Prism.Commands;assembly=Prism"
+    Title="{Binding Title}"
+    prism:ViewModelLocator.AutowireViewModel="True">
+
+    <ContentPage.Resources />
+
+    <StackLayout VerticalOptions="CenterAndExpand">
+        <ScrollView>
+            <StackLayout>
+                <Grid Margin="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <Entry
+                        IsEnabled="{Binding IdAndPassEnabled}"
+                        IsPassword="False"
+                        Placeholder="ID"
+                        Text="{Binding UserId}"
+                        VerticalOptions="CenterAndExpand" />
+                    <Entry
+                        Grid.Row="1"
+                        IsEnabled="{Binding IdAndPassEnabled}"
+                        IsPassword="True"
+                        Placeholder="HASŁO"
+                        Text="{Binding UserPassword}"
+                        VerticalOptions="CenterAndExpand">
+                        <Entry.Behaviors>
+                            <prism:EventToCommandBehavior Command="{Binding LoginCommand}" EventName="Completed" />
+                        </Entry.Behaviors>
+                    </Entry>
+
+                </Grid>
+                <ActivityIndicator
+                    IsRunning="True"
+                    IsVisible="{Binding IsLoading}"
+                    Scale="1"
+                    Color="Blue" />
+                <Button
+                    BackgroundColor="LightBlue"
+                    Command="{Binding LoginCommand}"
+                    Text="LOGIN"
+                    VerticalOptions="EndAndExpand" />
+
+            </StackLayout>
+
+        </ScrollView>
+    </StackLayout>
+</ContentPage>
