@@ -3,6 +3,8 @@
     x:Class="IndustryApp.Views.MainPage"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:prism="http://prismlibrary.com"
+    xmlns:s="clr-namespace:Prism.Commands;assembly=Prism"
     Title="{Binding Title}"
     BackgroundColor="Azure">
     <ContentPage.Resources>
@@ -26,63 +28,258 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="StartAndExpand">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
+    <StackLayout>
+        <ScrollView>
 
 
-            <StackLayout Margin="0,20,0,0" VerticalOptions="StartAndExpand">
+            <Grid Margin="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="260" />
+                    <RowDefinition Height="AUTO" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-                <!--<Label Text="data grid"
-                   VerticalTextAlignment="Start"
-                   VerticalOptions="CenterAndExpand"
-                   HorizontalTextAlignment="Center"/>-->
+                <!--  informacje o uzytkowniku  -->
+                <Frame
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    BorderColor="LightBlue"
+                    CornerRadius="10">
 
 
-                <Grid BackgroundColor="Azure">
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition Height="50" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*" />
-                        <ColumnDefinition Width="AUTO" />
-                        <ColumnDefinition Width="2*" />
-                    </Grid.ColumnDefinitions>
+                    <ScrollView Margin="0" Orientation="Horizontal">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="50" />
+                                <RowDefinition Height="40" />
+                                <RowDefinition Height="40" />
+                                <RowDefinition Height="40" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="80" />
+                                <ColumnDefinition Width="100" />
+                            </Grid.ColumnDefinitions>
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                FontAttributes="Bold"
+                                HorizontalTextAlignment="Start"
+                                LineBreakMode="CharacterWrap"
+                                Text="ID użytkownika"
+                                VerticalTextAlignment="Center" />
+                            <Label
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                FontAttributes="Bold"
+                                HorizontalTextAlignment="Start"
+                                LineBreakMode="WordWrap"
+                                Text="Nazwa użytkownika"
+                                VerticalTextAlignment="Center" />
 
-                    <Label
-                        Grid.Column="0"
-                        Style="{StaticResource HeaderLabel}"
-                        Text="TEMPERATURA" />
-                    <Label
-                        Grid.Column="1"
-                        Style="{StaticResource HeaderLabel}"
-                        Text="ID CZUJNIKA" />
-                    <Label
-                        Grid.Column="2"
-                        Style="{StaticResource HeaderLabel}"
-                        Text="CZAS" />
+                            <Label
+                                Grid.Row="2"
+                                Grid.Column="0"
+                                FontAttributes="Bold"
+                                HorizontalTextAlignment="Start"
+                                LineBreakMode="WordWrap"
+                                Text="Nazwa urządzenia"
+                                VerticalTextAlignment="Center" />
 
-                    <Label
-                        Grid.Row="1"
-                        Grid.Column="0"
-                        Style="{StaticResource LineLabel}"
-                        Text="{Binding ReciverData.Temperature}" />
-                    <Label
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        Style="{StaticResource LineLabel}"
-                        Text="{Binding ReciverData.Address}" />
-                    <Label
-                        Grid.Row="1"
-                        Grid.Column="2"
-                        Style="{StaticResource LineLabel}"
-                        Text="{Binding ReciverData.Date}" />
-                </Grid>
-            </StackLayout>
-        </Grid>
+                            <Label
+                                Grid.Row="3"
+                                Grid.Column="0"
+                                FontAttributes="Bold"
+                                HorizontalTextAlignment="Start"
+                                LineBreakMode="WordWrap"
+                                Text="Godzina"
+                                VerticalTextAlignment="Center" />
+
+                            <!--  column 1  -->
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                HorizontalTextAlignment="Start"
+                                LineBreakMode="CharacterWrap"
+                                Text="{Binding LoggedUser.UserId}"
+                                VerticalTextAlignment="Center" />
+                            <Label
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                HorizontalTextAlignment="Start"
+                                LineBreakMode="CharacterWrap"
+                                Text="{Binding LoggedUser.Name}"
+                                VerticalTextAlignment="Center" />
+                            <Label
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                HorizontalTextAlignment="Start"
+                                LineBreakMode="CharacterWrap"
+                                Text="{Binding LoggedDevice.Name}"
+                                VerticalTextAlignment="Center" />
+                            <Label
+                                Grid.Row="3"
+                                Grid.Column="1"
+                                HorizontalTextAlignment="Start"
+                                LineBreakMode="CharacterWrap"
+                                Text="{Binding TimeNow}"
+                                VerticalTextAlignment="Center" />
+
+                        </Grid>
+
+                    </ScrollView>
+                </Frame>
+                <!--  /informacje o uzytkowniku  -->
+
+                <!--  informacje o aktualnym rekordzie  -->
+                <Frame
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    BorderColor="LightBlue"
+                    CornerRadius="10">
+
+                    <ScrollView Orientation="Horizontal">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="40" />
+                                <RowDefinition Height="40" />
+                                <RowDefinition Height="40" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="AUTO" />
+                                <ColumnDefinition Width="AUTO" />
+                                <ColumnDefinition Width="AUTO" />
+                            </Grid.ColumnDefinitions>
+                            <!--  ROW 0  -->
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="3"
+                                FontAttributes="Bold"
+                                FontSize="10"
+                                HorizontalTextAlignment="Center"
+                                LineBreakMode="WordWrap"
+                                Text="AKTUALNE DANE Z CZUJNIKA"
+                                VerticalTextAlignment="Center" />
+                            <!--  ROW 1  -->
+                            <Label
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                FontAttributes="Bold"
+                                FontSize="10"
+                                HorizontalTextAlignment="Center"
+                                LineBreakMode="CharacterWrap"
+                                Text="TEMPERATRA"
+                                VerticalTextAlignment="Center" />
+                            <Label
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                FontAttributes="Bold"
+                                FontSize="10"
+                                HorizontalTextAlignment="Center"
+                                LineBreakMode="WordWrap"
+                                Text="ADRES CZUJNIKA"
+                                VerticalTextAlignment="Center" />
+                            <Label
+                                Grid.Row="1"
+                                Grid.Column="2"
+                                FontAttributes="Bold"
+                                FontSize="10"
+                                HorizontalTextAlignment="Center"
+                                LineBreakMode="WordWrap"
+                                Text="DATA POMIARU"
+                                VerticalTextAlignment="Center" />
+                            <!--  ROW 2  -->
+                            <Label
+                                Grid.Row="2"
+                                Grid.Column="0"
+                                FontSize="10"
+                                HorizontalTextAlignment="Center"
+                                LineBreakMode="WordWrap"
+                                Text="{Binding TempTable.Temperature}"
+                                VerticalTextAlignment="Center" />
+                            <Label
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                FontSize="10"
+                                HorizontalTextAlignment="Center"
+                                LineBreakMode="WordWrap"
+                                Text="{Binding TempTable.Address}"
+                                VerticalTextAlignment="Center" />
+                            <Label
+                                Grid.Row="2"
+                                Grid.Column="2"
+                                FontSize="10"
+                                HorizontalTextAlignment="Center"
+                                LineBreakMode="WordWrap"
+                                Text="{Binding TempTable.Date}"
+                                VerticalTextAlignment="Center" />
+
+
+                        </Grid>
+                    </ScrollView>
+                </Frame>
+                <!--  / informacje o aktualnym rekordzie  -->
+
+                <!--  siatka z menu  -->
+                <CollectionView
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Header="Wybierz okres"
+                    ItemsSource="{Binding CollectionViewItems}"
+                    SelectedItem="{Binding SelectedItem}"
+                    SelectionMode="Single">
+
+
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Vertical" Span="2" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Frame
+                                BackgroundColor="CadetBlue"
+                                BorderColor="LightBlue"
+                                CornerRadius="20">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="30" />
+                                    </Grid.RowDefinitions>
+                                    <Label
+                                        Grid.Row="0"
+                                        FontAttributes="Bold"
+                                        FontSize="30"
+                                        HorizontalTextAlignment="Center"
+                                        LineBreakMode="WordWrap"
+                                        Text="{Binding ID}"
+                                        VerticalOptions="CenterAndExpand"
+                                        VerticalTextAlignment="Center" />
+                                    <Label
+                                        Grid.Row="1"
+                                        BackgroundColor="DarkSeaGreen"
+                                        FontAttributes="NONE"
+                                        FontSize="15"
+                                        HorizontalTextAlignment="Center"
+                                        LineBreakMode="WordWrap"
+                                        Text="{Binding Name}"
+                                        VerticalOptions="EndAndExpand"
+                                        VerticalTextAlignment="Center" />
+                                </Grid>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                    <!--<CollectionView.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding CollectionItemSelected}" NumberOfTapsRequired="2" />
+                    </CollectionView.GestureRecognizers>-->
+
+                </CollectionView>
+                <!--  /siatka z menu  -->
+
+            </Grid>
+
+        </ScrollView>
     </StackLayout>
-
 </ContentPage>

@@ -10,12 +10,17 @@ using Prism.Services;
 using Prism.Navigation;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
+using System.Threading;
+using IndustryApp.Model;
+using WCF;
 
 namespace IndustryApp.ViewModels
 {
     public class LoginPageViewModel : ViewModelBase
     {
         private bool validLoginData = false;
+        private string naviPagePath = "MainPage";
 
         private string userId;
         public string UserId
@@ -45,129 +50,108 @@ namespace IndustryApp.ViewModels
             set { SetProperty(ref idAndPassEnabled, value); }
         }
 
+        private ValidateUserResponse response;
+        public ValidateUserResponse Response
+        {
+            get { return response; }
+            set { SetProperty(ref response, value); }
+        }
+
+
         private DelegateCommand loginCommand;
         public DelegateCommand LoginCommand =>
             loginCommand ?? (loginCommand = new DelegateCommand(ExecuteLoginCommand));
-        void ExecuteLoginCommand()
+        async void ExecuteLoginCommand()
         {
             if (!String.IsNullOrEmpty(UserId))
             {
-                IsLoading = true;
-                IdAndPassEnabled = false;
-                this.ConnectToDb();
-                IsLoading = false;
-                IdAndPassEnabled = true;
-            }
-        }
-
-        private async void ConnectToDb()
-        {
-            Stopwatch s = new Stopwatch();
-            s.Start();
-            try
-            {
-                using (SqlConnection sqlConnection = new SqlConnection(base.sqlConnectionString))
-                {
-                    sqlConnection.Open();
-                    using (SqlCommand command = new SqlCommand())
-                    {
-                        command.CommandText = "SELECT TOP 1 * " +
-                                                "FROM dbo.UserTable AS ut " +
-                                                $"WHERE ut.[UserId] = '{this.UserId}' " +
-                                                $"AND ut.[Password] = '{this.UserPassword}'";
-                        command.Connection = sqlConnection;
-
-                        using (SqlDataReader reader = command.ExecuteReader())
-                        {
-                            if (reader.HasRows)
-                            {
-                                // navi to main page
-
-                                while (reader.Read())
-                                {
-                                    ViewModelBase.LoggedUserName = reader.GetString(3);
-                                    ViewModelBase.LoggedUserFirstName = reader.GetString(4);
-                                    validLoginData = true;
-                                }
-                            }
-                            else
-                            {
-                                
-                                pageDialogService.DisplayAlertAsync("UWAGA",
-                                                                     "Niepoprawny login lub hasło",
-                                                                     "OK");
-                            }
-                        }
-                    }
-
-                    sqlConnection.Close();
-                    s.Stop();
-                    var x = s.ElapsedMilliseconds;
-                }
-            }
-            catch (Exception ex)
-            {
-                Device.BeginInvokeOnMainThread(() => pageDialogService.DisplayAlertAsync("SQLAlert", $"[SQLException] {ex.Message}", "OK"));
-            }
-            finally
-            {
+                Loading();
+                await Task.Run(() => VerifyUser());
+#if DEBUG
+                validLoginData = true;
+#endif
                 if (validLoginData)
                 {
-                    this.ChceckDb();
-                    var res = await NavigationService.NavigateAsync("MainPage");
-                    if (!res.Success)
+                    await NavigationService.NavigateAsync(naviPagePath);
+                }
+                else
+                {
+                    if (String.IsNullOrEmpty(Response.DeviceName))
                     {
-                        Device.BeginInvokeOnMainThread(() => pageDialogService.DisplayAlertAsync("Navigation", "Błąd nawigacji: " + res.Exception.Message, "OK"));
+                        if (client.RegisterDevice(DeviceId))
+                            await pageDialogService.DisplayAlertAsync("DEVICE ERROR", "URZĄDZENIE NIE JEST SKONFIGUROWANE Z SYSTEMEM => Sprawdź baze", "OK");
+
+                        else
+                            await pageDialogService.DisplayAlertAsync("DEVICE ERROR", "URZĄDZENIE NIE JEST SKONFIGUROWANE Z SYSTEMEM", "OK");
                     }
+                    else if (String.IsNullOrEmpty(Response.UserName))
+                    {
+                        await pageDialogService.DisplayAlertAsync("LOGIN ERROR", "BŁĘDNE ID LUB HASŁO", "OK");
+                    }
+                    ClearView();
                 }
             }
         }
 
-        private void ChceckDb()
+        private void ClearView()
         {
-            using (SqlConnection connection = new SqlConnection(sqlConnectionString))
-            {
-                try
-                {
-                    connection.Open();
-                    using (SqlCommand cmd = new SqlCommand())
-                    {
-                        cmd.Connection = connection;
-                        cmd.CommandType = CommandType.Text;
-                        cmd.CommandText = "SELECT * FROM TemperatureTable where [Date] < @param";
-
-                        cmd.Parameters.AddWithValue("@param", DateTime.Now.AddDays(-7).ToString("yyyy-MM-dd HH:mm:ss"));
-                        //int i = cmd.ExecuteNonQuery();
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                var x = reader.GetInt64(0);
-                                Console.WriteLine(reader.GetInt64(0));
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-
-                    Device.BeginInvokeOnMainThread(() => pageDialogService.DisplayAlertAsync("SQLAlert", $"[SQLException] {ex.Message}", "OK"));
-
-                }
-                finally
-                {
-                    connection.Close();
-                    IsLoading = false;
-                    IdAndPassEnabled = true;
-                }
-            }
+            UserId = UserPassword = "";
+            IsLoading = false;
+            IdAndPassEnabled = true;
         }
+
+        private async Task<bool> VerifyUser()
+        {
+            //WCFService.ServiceClient serviceClient = new WCFService.ServiceClient();
+            //Response = serviceClient.ValidateUser(this.UserId, this.UserPassword, DeviceId);
+           // WCF.ServiceClient client = new WCF.ServiceClient(WCF.ServiceClient.EndpointConfiguration.BasicHttpBinding_IService, "http://192.168.0.105/WCF/Service.svc");
+            Response = client.ValidateUser(this.UserId, this.UserPassword, DeviceId);
+            User user = new User
+            {
+                UserId = response.UserId,
+                Name = response.UserName,
+            };
+            LoggedDevice device = new LoggedDevice()
+            {
+                ID = response.DeviceId,
+                Name = response.DeviceName
+            };
+            base.SetUser(user);
+            base.SetDevice(device);
+            validLoginData = Response.IsValid;
+            return Response.IsValid;
+        }
+
+        private void Loading()
+        {
+            IsLoading = true;
+            IdAndPassEnabled = false;
+        }
+
+
 
         private void InitVM()
         {
             base.Title = "Zaloguj się";
             IdAndPassEnabled = true;
+            ClearView();
+            DeviceId = this.getDeviceId();
         }
+
+        private string getDeviceId()
+        {
+            string retStr = String.Empty;
+            var deviceId = Preferences.Get("my_deviceId", string.Empty);
+            if (String.IsNullOrWhiteSpace(deviceId))
+            {
+                deviceId = System.Guid.NewGuid().ToString();
+                Preferences.Set("my_deviceId", deviceId);
+            }
+            retStr = deviceId;
+
+            return retStr;
+        }
+
         public LoginPageViewModel(IPageDialogService p, INavigationService ns) : base(p, ns)
         {
             this.InitVM();

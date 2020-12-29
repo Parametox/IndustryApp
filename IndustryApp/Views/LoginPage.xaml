@@ -6,14 +6,21 @@
     xmlns:prism="http://prismlibrary.com"
     xmlns:s="clr-namespace:Prism.Commands;assembly=Prism"
     Title="{Binding Title}"
-    prism:ViewModelLocator.AutowireViewModel="True">
+    prism:ViewModelLocator.AutowireViewModel="True"
+    BackgroundColor="White">
 
     <ContentPage.Resources />
 
     <StackLayout VerticalOptions="CenterAndExpand">
         <ScrollView>
             <StackLayout>
-                <Grid Margin="5">
+                <Image
+                    Aspect="AspectFit"
+                    HeightRequest="300"
+                    HorizontalOptions="CenterAndExpand"
+                    Source="/aghMain.jpg"
+                    VerticalOptions="CenterAndExpand" />
+                <Grid Margin="0,10,5,5">
                     <Grid.RowDefinitions>
                         <RowDefinition />
                         <RowDefinition />

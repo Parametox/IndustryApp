@@ -1,5 +1,7 @@
 using IndustryApp.ViewModels;
 using IndustryApp.Views;
+using OxyPlot.Xamarin.Forms;
+using OxyPlot;
 using Prism;
 using Prism.Ioc;
 using Xamarin.Essentials.Implementation;
@@ -13,6 +15,8 @@ namespace IndustryApp
         public App(IPlatformInitializer initializer)
             : base(initializer)
         {
+            
+
         }
 
         protected override async void OnInitialized()
@@ -29,6 +33,7 @@ namespace IndustryApp
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<MainPage, MainPageViewModel>();
             containerRegistry.RegisterForNavigation<LoginPage, LoginPageViewModel>();
+            containerRegistry.RegisterForNavigation<OxyPlotPage, OxyPlotPageViewModel>();
         }
     }
 }
