@@ -15,4 +15,5 @@ namespace IndustryApp.Droid
             base.OnResume();
             StartActivity(new Intent(Application.Context, typeof(MainActivity)));
         }
-    } 
+    }
+}
