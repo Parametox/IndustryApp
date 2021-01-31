@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Globalization;
+using System.ServiceModel;
 using System.Text;
 
 namespace IndustryApp.ViewModels
@@ -17,9 +18,12 @@ namespace IndustryApp.ViewModels
 
         public static User sLoggedUser { get; private set; }
         public static LoggedDevice sDevice { get; private set; }
+        public static readonly EndpointAddress EndPoint = new EndpointAddress("http://192.168.0.105/WCF/Service.svc");
+        public static BasicHttpBinding binding = CreateBasicHttp();
 
 
-        protected WCF.ServiceClient client = new WCF.ServiceClient(WCF.ServiceClient.EndpointConfiguration.BasicHttpBinding_IService, "http://192.168.0.105/WCF/Service.svc");
+
+        protected WCF.ServiceClient client = new WCF.ServiceClient(binding,EndPoint);
 
 
         private User loggedUser;
@@ -61,6 +65,19 @@ namespace IndustryApp.ViewModels
             }
         }
 
+        private static BasicHttpBinding CreateBasicHttp()
+        {
+            BasicHttpBinding binding = new BasicHttpBinding
+            {
+                Name = "basicHttpBinding"                
+            };
+            TimeSpan timeout = new TimeSpan(0, 1, 30);
+            binding.SendTimeout = timeout;
+            binding.OpenTimeout = timeout;
+            binding.ReceiveTimeout = timeout;
+            return binding;
+        }
+
         protected void SetDevice(LoggedDevice device)
         {
             if (device != null)
@@ -93,17 +110,8 @@ namespace IndustryApp.ViewModels
         public ViewModelBase(IPageDialogService dialogService, INavigationService navigationService)
 
         {
-            //sqlConnectionString = "Data Source=192.168.0.105/SQLEXPRESS;" +
-            //                                "Initial Catalog=InzDatabase;" +
-            //                                //"Integrated Security=SSPI;" +
-            //                                "User ID=pci;" +
-            //                                "Password=pass#pass;";
-
-            sqlConnectionString = "Server=192.168.0.105;" +
-                                    "Database=InzDatabase;" +
-                                    "User Id=pci;" +
-                                    "Password=pass#pass;";
-
+          
+           
             pageDialogService = dialogService;
             this.NavigationService = navigationService;
 

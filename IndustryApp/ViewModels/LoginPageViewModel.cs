@@ -67,10 +67,7 @@ namespace IndustryApp.ViewModels
             {
                 Loading();
                 await Task.Run(() => VerifyUser());
-#if DEBUG
-                validLoginData = true;
-#endif
-                if (validLoginData)
+                if (validLoginData && !(String.IsNullOrEmpty(Response.DeviceName)))
                 {
                     await NavigationService.NavigateAsync(naviPagePath);
                 }
@@ -104,8 +101,15 @@ namespace IndustryApp.ViewModels
         {
             //WCFService.ServiceClient serviceClient = new WCFService.ServiceClient();
             //Response = serviceClient.ValidateUser(this.UserId, this.UserPassword, DeviceId);
-           // WCF.ServiceClient client = new WCF.ServiceClient(WCF.ServiceClient.EndpointConfiguration.BasicHttpBinding_IService, "http://192.168.0.105/WCF/Service.svc");
-            Response = client.ValidateUser(this.UserId, this.UserPassword, DeviceId);
+             WCF.ServiceClient client11 = new WCF.ServiceClient(ServiceClient.EndpointConfiguration.BasicHttpBinding_IService, "http://192.168.0.105/WCF/Service.svc");
+            try
+            {
+                Response = client11.ValidateUser(this.UserId, this.UserPassword, DeviceId);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            } 
             User user = new User
             {
                 UserId = response.UserId,
@@ -136,6 +140,17 @@ namespace IndustryApp.ViewModels
             IdAndPassEnabled = true;
             ClearView();
             DeviceId = this.getDeviceId();
+            try
+            {
+                WCF.ServiceClient sc = new WCF.ServiceClient(ServiceClient.EndpointConfiguration.BasicHttpBinding_IService, "http://192.168.0.105/WCF/Service.svc");
+                var x = sc.GetData(22);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+
+            }
+
         }
 
         private string getDeviceId()

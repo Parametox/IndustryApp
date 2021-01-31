@@ -10,7 +10,7 @@ namespace IndustryApp.Model
         public string Name { get; set; }
 
         private static short counter = 1;
-
+         
         public ChartSelector()
         {
             //this.ID = counter++;

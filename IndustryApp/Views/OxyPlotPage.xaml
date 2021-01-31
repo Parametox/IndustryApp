@@ -8,7 +8,7 @@
     prism:ViewModelLocator.AutowireViewModel="True">
 
     <Grid BackgroundColor="white">
-        <oxy:PlotView Model="{Binding Model}" />
+        <oxy:PlotView Model="{Binding Model}" IsEnabled="False" />
     </Grid>
 
 </ContentPage>

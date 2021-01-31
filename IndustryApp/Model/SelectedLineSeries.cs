@@ -32,9 +32,9 @@ namespace IndustryApp.Model
         {
             
             SelectedMarkerSize = MarkerSize;
-            TouchCompleted += SelectedLineSeries_TouchCompleted;
-            TouchStarted += SelectedLineSeries_TouchCompleted;
-            MouseDown += SelectableLineSeries_MouseDown;
+            //TouchCompleted += SelectedLineSeries_TouchCompleted;
+            //TouchStarted += SelectedLineSeries_TouchCompleted;
+            //MouseDown += SelectableLineSeries_MouseDown;
         }
 
         private void SelectedLineSeries_TouchCompleted(object sender, OxyTouchEventArgs e)

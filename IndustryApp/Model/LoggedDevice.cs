@@ -7,6 +7,6 @@ namespace IndustryApp.Model
     public class LoggedDevice
     {
         public string ID { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; } 
     }
 }

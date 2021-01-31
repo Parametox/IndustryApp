@@ -75,7 +75,7 @@ namespace IndustryApp.ViewModels
         private void InitValues()
         {
             base.Title = "Parametry układu";
-            WCFService = new ServiceClient(WCF.ServiceClient.EndpointConfiguration.BasicHttpBinding_IService, "http://192.168.0.105/WCF/Service.svc");
+            WCFService = new ServiceClient( );
             Thread thd = new Thread(() => TickTockMachine());
             thd.Start();
 

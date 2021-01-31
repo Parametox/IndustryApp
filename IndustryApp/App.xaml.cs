@@ -9,7 +9,7 @@ using Xamarin.Essentials.Interfaces;
 using Xamarin.Forms;
 
 namespace IndustryApp
-{
+{ 
     public partial class App
     {
         public App(IPlatformInitializer initializer)

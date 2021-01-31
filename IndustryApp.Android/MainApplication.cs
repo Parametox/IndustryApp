@@ -20,4 +20,4 @@ namespace IndustryApp.Droid
             Xamarin.Essentials.Platform.Init(this);
         }
     }
-}
+} 

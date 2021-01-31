@@ -119,6 +119,8 @@ namespace WCF
         
         private System.Nullable<System.DateTime> DateField;
         
+        private System.Nullable<byte> FanStatusField;
+        
         private long IdField;
         
         private string TemperatureField;
@@ -146,6 +148,19 @@ namespace WCF
             set
             {
                 this.DateField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Nullable<byte> FanStatus
+        {
+            get
+            {
+                return this.FanStatusField;
+            }
+            set
+            {
+                this.FanStatusField = value;
             }
         }
         
@@ -240,6 +255,12 @@ namespace WCF
     public interface IService
     {
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/TestConnection", ReplyAction="http://tempuri.org/IService/TestConnectionResponse")]
+        string TestConnection(bool _dummy);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/TestConnection", ReplyAction="http://tempuri.org/IService/TestConnectionResponse")]
+        System.Threading.Tasks.Task<string> TestConnectionAsync(bool _dummy);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/ValidateUser", ReplyAction="http://tempuri.org/IService/ValidateUserResponse")]
         WCF.ValidateUserResponse ValidateUser(string _userId, string _password, string _deviceId);
         
@@ -258,17 +279,35 @@ namespace WCF
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetMunuteTemperature", ReplyAction="http://tempuri.org/IService/GetMunuteTemperatureResponse")]
         System.Threading.Tasks.Task<WCF.TemperatureCollection> GetMunuteTemperatureAsync();
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetTwoMunutesTemperature", ReplyAction="http://tempuri.org/IService/GetTwoMunutesTemperatureResponse")]
+        WCF.TemperatureCollection GetTwoMunutesTemperature();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetTwoMunutesTemperature", ReplyAction="http://tempuri.org/IService/GetTwoMunutesTemperatureResponse")]
+        System.Threading.Tasks.Task<WCF.TemperatureCollection> GetTwoMunutesTemperatureAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetThreeMunutesTemperature", ReplyAction="http://tempuri.org/IService/GetThreeMunutesTemperatureResponse")]
+        WCF.TemperatureCollection GetThreeMunutesTemperature();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetThreeMunutesTemperature", ReplyAction="http://tempuri.org/IService/GetThreeMunutesTemperatureResponse")]
+        System.Threading.Tasks.Task<WCF.TemperatureCollection> GetThreeMunutesTemperatureAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetFourMunutesTemperature", ReplyAction="http://tempuri.org/IService/GetFourMunutesTemperatureResponse")]
+        WCF.TemperatureCollection GetFourMunutesTemperature();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetFourMunutesTemperature", ReplyAction="http://tempuri.org/IService/GetFourMunutesTemperatureResponse")]
+        System.Threading.Tasks.Task<WCF.TemperatureCollection> GetFourMunutesTemperatureAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetFiveMunutesTemperature", ReplyAction="http://tempuri.org/IService/GetFiveMunutesTemperatureResponse")]
+        WCF.TemperatureCollection GetFiveMunutesTemperature();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetFiveMunutesTemperature", ReplyAction="http://tempuri.org/IService/GetFiveMunutesTemperatureResponse")]
+        System.Threading.Tasks.Task<WCF.TemperatureCollection> GetFiveMunutesTemperatureAsync();
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/RegisterDevice", ReplyAction="http://tempuri.org/IService/RegisterDeviceResponse")]
         bool RegisterDevice(string _deviceID);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/RegisterDevice", ReplyAction="http://tempuri.org/IService/RegisterDeviceResponse")]
         System.Threading.Tasks.Task<bool> RegisterDeviceAsync(string _deviceID);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/TestConnection", ReplyAction="http://tempuri.org/IService/TestConnectionResponse")]
-        string TestConnection(bool _dummy);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/TestConnection", ReplyAction="http://tempuri.org/IService/TestConnectionResponse")]
-        System.Threading.Tasks.Task<string> TestConnectionAsync(bool _dummy);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetData", ReplyAction="http://tempuri.org/IService/GetDataResponse")]
         string GetData(int value);
@@ -333,6 +372,16 @@ namespace WCF
         {
         }
         
+        public string TestConnection(bool _dummy)
+        {
+            return base.Channel.TestConnection(_dummy);
+        }
+        
+        public System.Threading.Tasks.Task<string> TestConnectionAsync(bool _dummy)
+        {
+            return base.Channel.TestConnectionAsync(_dummy);
+        }
+        
         public WCF.ValidateUserResponse ValidateUser(string _userId, string _password, string _deviceId)
         {
             return base.Channel.ValidateUser(_userId, _password, _deviceId);
@@ -363,6 +412,46 @@ namespace WCF
             return base.Channel.GetMunuteTemperatureAsync();
         }
         
+        public WCF.TemperatureCollection GetTwoMunutesTemperature()
+        {
+            return base.Channel.GetTwoMunutesTemperature();
+        }
+        
+        public System.Threading.Tasks.Task<WCF.TemperatureCollection> GetTwoMunutesTemperatureAsync()
+        {
+            return base.Channel.GetTwoMunutesTemperatureAsync();
+        }
+        
+        public WCF.TemperatureCollection GetThreeMunutesTemperature()
+        {
+            return base.Channel.GetThreeMunutesTemperature();
+        }
+        
+        public System.Threading.Tasks.Task<WCF.TemperatureCollection> GetThreeMunutesTemperatureAsync()
+        {
+            return base.Channel.GetThreeMunutesTemperatureAsync();
+        }
+        
+        public WCF.TemperatureCollection GetFourMunutesTemperature()
+        {
+            return base.Channel.GetFourMunutesTemperature();
+        }
+        
+        public System.Threading.Tasks.Task<WCF.TemperatureCollection> GetFourMunutesTemperatureAsync()
+        {
+            return base.Channel.GetFourMunutesTemperatureAsync();
+        }
+        
+        public WCF.TemperatureCollection GetFiveMunutesTemperature()
+        {
+            return base.Channel.GetFiveMunutesTemperature();
+        }
+        
+        public System.Threading.Tasks.Task<WCF.TemperatureCollection> GetFiveMunutesTemperatureAsync()
+        {
+            return base.Channel.GetFiveMunutesTemperatureAsync();
+        }
+        
         public bool RegisterDevice(string _deviceID)
         {
             return base.Channel.RegisterDevice(_deviceID);
@@ -371,16 +460,6 @@ namespace WCF
         public System.Threading.Tasks.Task<bool> RegisterDeviceAsync(string _deviceID)
         {
             return base.Channel.RegisterDeviceAsync(_deviceID);
-        }
-        
-        public string TestConnection(bool _dummy)
-        {
-            return base.Channel.TestConnection(_dummy);
-        }
-        
-        public System.Threading.Tasks.Task<string> TestConnectionAsync(bool _dummy)
-        {
-            return base.Channel.TestConnectionAsync(_dummy);
         }
         
         public string GetData(int value)

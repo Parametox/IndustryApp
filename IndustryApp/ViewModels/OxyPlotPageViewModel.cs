@@ -37,6 +37,12 @@ namespace IndustryApp.ViewModels
             set { SetProperty(ref pionts, value); }
         }
 
+        private List<DataPoint> pionts1;
+        public List<DataPoint> Points1
+        {
+            get { return pionts1; }
+            set { SetProperty(ref pionts1, value); }
+        }
         private WCF.TemperatureCollection tempCollection;
         public WCF.TemperatureCollection TempCollection
         {
@@ -49,6 +55,13 @@ namespace IndustryApp.ViewModels
         {
             get { return ss1; }
             set { SetProperty(ref ss1, value); }
+        }
+
+        private SelectableLineSeries ss2;
+        public SelectableLineSeries s2
+        {
+            get { return ss2; }
+            set { SetProperty(ref ss2, value); }
         }
         //public SelectableLineSeries s1 { get; set; }
 
@@ -64,7 +77,7 @@ namespace IndustryApp.ViewModels
                 {
                     case 1:
                         this.OneMinuteChart();
-                        Thread t = new Thread(x);
+                        Thread t = new Thread(chart);
                         t.Start();
                         break;
                     default:
@@ -72,17 +85,14 @@ namespace IndustryApp.ViewModels
                 }
             }
         }
-        private void x()
+        private void chart()
         {
             while (true)
             {
                 this.OneMinuteChart();
             }
         }
-        private static void dd()
-        {
 
-        }
         private void OneMinuteChart()
         {
 
@@ -95,7 +105,9 @@ namespace IndustryApp.ViewModels
 
                 Console.WriteLine(ex.Message);
             }
+
             Points = new List<DataPoint>();
+            Points1 = new List<DataPoint>();
 
             try
             {
@@ -119,10 +131,16 @@ namespace IndustryApp.ViewModels
                     var item = TempCollection.TemperatureTables[i];
                     double x, y;
                     x = DateTimeAxis.ToDouble(item.Date);
-                    y = double.Parse(item.Temperature.Replace('.',','));
-                    var point = new DataPoint(x,y);
+                    y = double.Parse(item.Temperature);
+                    var point = new DataPoint(x, y);
 
-                    Points.Add(point);
+                    if (item.FanStatus == 1)                    
+                        Points1.Add(point);                    
+                    else
+                        Points.Add(point);
+
+
+
                 }
             }
             catch (Exception ex)
@@ -136,9 +154,10 @@ namespace IndustryApp.ViewModels
 
             //https://bytelanguage.net/2019/11/07/oxyplot-selectable-point/
 
+            
             s1 = new SelectableLineSeries()
             {
-                Title = "Temperature",
+                Title = "Temperature (Fan Off)",
                 MarkerType = MarkerType.Circle,
                 SelectionMode = SelectionMode.Single,
                 IsDataPointSelectable = true,
@@ -148,14 +167,32 @@ namespace IndustryApp.ViewModels
                 MarkerSize = 5,
                 ItemsSource = Points
             };
+
+            s2 = new SelectableLineSeries()
+            {
+                Title = "Temperature (Fan On)",
+                MarkerType = MarkerType.Circle,
+                SelectionMode = SelectionMode.Single,
+                IsDataPointSelectable = true,
+                MarkerFill = OxyColors.Red,
+                LineStyle = LineStyle.Solid,
+                Color = OxyColors.Blue,
+                MarkerSize = 5,
+                ItemsSource = Points1
+            };
             Model.InvalidatePlot(true);
+            
+           Model.Series.Add(s2);
             Model.Series.Add(s1);
+             
 
         }
 
         public OxyPlotPageViewModel(IPageDialogService p, INavigationService ns)
             : base(p, ns)
         {
+
+            Title = "Wykres f(t) = T";
 
             NumberFormatInfo nfi = new CultureInfo("pl-PL").NumberFormat;
             nfi.NumberDecimalSeparator = ".";

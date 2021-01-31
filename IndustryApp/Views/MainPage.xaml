@@ -23,7 +23,7 @@
                 <Setter Property="FontAttributes" Value="Italic" />
                 <Setter Property="FontSize" Value="15" />
                 <Setter Property="TextColor" Value="Black" />
-
+ 
             </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
