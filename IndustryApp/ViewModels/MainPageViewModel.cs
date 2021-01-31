@@ -107,6 +107,7 @@ namespace IndustryApp.ViewModels
         {
             NavigationParameters parameters = new NavigationParameters();
             parameters.Add("config", _charts.ID);
+            SelectedItem = null;
             await NavigationService.NavigateAsync("OxyPlotPage",parameters);
         }
 

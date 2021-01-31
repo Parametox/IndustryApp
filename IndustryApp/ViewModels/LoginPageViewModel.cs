@@ -132,8 +132,6 @@ namespace IndustryApp.ViewModels
             IdAndPassEnabled = false;
         }
 
-
-
         private void InitVM()
         {
             base.Title = "Zaloguj się";
@@ -164,6 +162,9 @@ namespace IndustryApp.ViewModels
             }
             retStr = deviceId;
 
+#if DEBUG
+            retStr = "f1454c14-8f64-4d27-8733-3a1c2ce554fa";
+#endif
             return retStr;
         }
 

@@ -95,6 +95,7 @@ namespace IndustryApp.ViewModels
 
         private void OneMinuteChart()
         {
+            NumberFormatInfo nfi = new CultureInfo(Thread.CurrentThread.CurrentCulture.LCID, false).NumberFormat;
 
             try
             {
@@ -131,6 +132,9 @@ namespace IndustryApp.ViewModels
                     var item = TempCollection.TemperatureTables[i];
                     double x, y;
                     x = DateTimeAxis.ToDouble(item.Date);
+
+                    item.Temperature = item.Temperature.Replace(".", nfi.NumberDecimalSeparator);
+                    item.Temperature = item.Temperature.Replace(",", nfi.NumberDecimalSeparator);
                     y = double.Parse(item.Temperature);
                     var point = new DataPoint(x, y);
 
@@ -138,19 +142,12 @@ namespace IndustryApp.ViewModels
                         Points1.Add(point);                    
                     else
                         Points.Add(point);
-
-
-
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                //throw;
             }
-
-
-
 
             //https://bytelanguage.net/2019/11/07/oxyplot-selectable-point/
 
@@ -182,10 +179,8 @@ namespace IndustryApp.ViewModels
             };
             Model.InvalidatePlot(true);
             
-           Model.Series.Add(s2);
+            Model.Series.Add(s2);
             Model.Series.Add(s1);
-             
-
         }
 
         public OxyPlotPageViewModel(IPageDialogService p, INavigationService ns)
@@ -194,8 +189,6 @@ namespace IndustryApp.ViewModels
 
             Title = "Wykres f(t) = T";
 
-            NumberFormatInfo nfi = new CultureInfo("pl-PL").NumberFormat;
-            nfi.NumberDecimalSeparator = ".";
         }
     }
 }
